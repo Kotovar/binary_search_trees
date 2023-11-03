@@ -70,9 +70,65 @@ class Tree {
     }
     if (value === null || isNaN(value))
       throw new Error("Please enter a valid value");
-    console.log(this.#findNode(this.root, value));
     return this.#findNode(this.root, value);
   }
+
+  levelOrder(arr = [], queue = [], root = this.root) {
+    if (!this.#isNode(root)) {
+      return null;
+    }
+    arr.push(root.data);
+    queue.push(root.left);
+    queue.push(root.right);
+    while (queue.length) {
+      const level = queue[0];
+      queue.shift();
+      this.levelOrder(arr, queue, level);
+    }
+    return arr;
+  }
+
+  inOrder(root = this.root, arr = []) {
+    if (root) {
+      this.inOrder(root.left, arr);
+      arr.push(root.data);
+      this.inOrder(root.right, arr);
+    }
+    return arr;
+  }
+
+  preOrder(root = this.root, arr = []) {
+    if (!this.#isNode(root)) {
+      return null;
+    }
+    arr.push(root.data);
+    this.preOrder(root.left, arr);
+    this.preOrder(root.right, arr);
+    return arr;
+  }
+
+  postOrder(root = this.root, arr = []) {
+    if (!this.#isNode(root)) {
+      return null;
+    }
+    this.postOrder(root.left, arr);
+    this.postOrder(root.right, arr);
+    arr.push(root.data);
+    return arr;
+  }
+
+  height(node = this.root) {
+    if (node === null) return 0;
+    let leftSide = this.height(node.left);
+    let rightSide = this.height(node.right);
+    if (leftSide > rightSide) {
+      return leftSide + 1;
+    } else {
+      return rightSide + 1;
+    }
+  }
+
+  depth(node = this.root) {}
 
   #findNode(node, value) {
     if (!this.#isNode(node)) {
@@ -129,9 +185,17 @@ class Tree {
   }
 }
 
-const arr = [1, 7, 3, 23, 8, 9, 6, 3, 6, 7, 9, 67, 11, 12, 15, 17];
+const arr = [1, 7, 3, 23, 8, 9, 6, 3, 6, 7, 9, 67, 11, 12, 15];
 let testTree = new Tree(arr);
-console.log(testTree);
+// console.log(testTree);
 // console.log(testTree.find(3));
 testTree.prettyPrint();
-//  testTree.delete(3);
+
+// testTree.delete(3);
+// console.log(testTree.levelOrder());
+console.log(`${testTree.levelOrder()} : levelOrder`);
+console.log(`${testTree.inOrder()} : inOrder`);
+console.log(`${testTree.preOrder()} : preOrder`);
+console.log(`${testTree.postOrder()} : postOrder`);
+console.log(`${testTree.height()} : height`);
+console.log(`${testTree.height(testTree.find(3))} : height to node '3'`);
