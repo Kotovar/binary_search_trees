@@ -118,17 +118,38 @@ class Tree {
   }
 
   height(node = this.root) {
-    if (node === null) return 0;
-    let leftSide = this.height(node.left);
-    let rightSide = this.height(node.right);
-    if (leftSide > rightSide) {
-      return leftSide + 1;
-    } else {
-      return rightSide + 1;
+    if (!node) {
+      return -1;
+    }
+    return Math.max(this.height(node.left), this.height(node.right)) + 1;
+  }
+
+  depth(value = this.root.data, node = this.root) {
+    if (!node) {
+      return -1;
+    }
+    if (node.data === value) return 0;
+    if (value < node.data) {
+      return this.depth(value, node.left) + 1;
+    }
+    if (value > node.data) {
+      return this.depth(value, node.right) + 1;
     }
   }
 
-  depth(node = this.root) {}
+  isBalanced() {
+    if (!this.root) {
+      return true;
+    }
+    let leftHeight = this.height(this.root.left);
+    let rightHeight = this.height(this.root.right);
+    return Math.abs(leftHeight - rightHeight) <= 1;
+  }
+
+  rebalance() {
+    let newArray = this.inOrder();
+    this.root = this.buildTree(this.sort(newArray));
+  }
 
   #findNode(node, value) {
     if (!this.#isNode(node)) {
@@ -155,11 +176,11 @@ class Tree {
     } else if (value > node.data) {
       node.right = this.#deleteNode(node.right, value);
     } else {
-      if (node.left == null && node.right == null) {
+      if (node.left === null && node.right === null) {
         node = null;
-      } else if (node.left == null) {
+      } else if (node.left === null) {
         node = node.right;
-      } else if (node.right == null) {
+      } else if (node.right === null) {
         node = node.left;
       } else {
         let minRight = node.right;
@@ -185,17 +206,36 @@ class Tree {
   }
 }
 
-const arr = [1, 7, 3, 23, 8, 9, 6, 3, 6, 7, 9, 67, 11, 12, 15];
-let testTree = new Tree(arr);
-// console.log(testTree);
-// console.log(testTree.find(3));
+function randomArray(num = 5, width = 100) {
+  const array = [];
+  for (let i = 0; i < num; i++) {
+    array.push(Math.floor(Math.random() * width) + 1);
+  }
+  return array;
+}
+
+const randomArr = randomArray(10, 50);
+
+let testTree = new Tree(randomArr);
+
+console.log(`is the tree balanced? - ${testTree.isBalanced()}`);
+testTree.prettyPrint();
+testTree.insert(68);
+testTree.insert(69);
+testTree.insert(70);
+console.log(`is the tree balanced? - ${testTree.isBalanced()}`);
+testTree.prettyPrint();
+console.log("use rebalance");
+testTree.rebalance();
+console.log(`is the tree balanced? - ${testTree.isBalanced()}`);
 testTree.prettyPrint();
 
-// testTree.delete(3);
-// console.log(testTree.levelOrder());
 console.log(`${testTree.levelOrder()} : levelOrder`);
 console.log(`${testTree.inOrder()} : inOrder`);
 console.log(`${testTree.preOrder()} : preOrder`);
 console.log(`${testTree.postOrder()} : postOrder`);
 console.log(`${testTree.height()} : height`);
-console.log(`${testTree.height(testTree.find(3))} : height to node '3'`);
+// console.log(`${testTree.height(testTree.find(67))} : height to node '67'`);
+// console.log(`${testTree.depth(3)} : depth to node '3'`);
+// console.log(testTree.find(68));
+// testTree.delete(3);
