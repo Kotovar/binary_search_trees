@@ -38,4 +38,4 @@ Traversing a tree in depth:
 `postOrder` (reversed) - traverse the left subtree, traverse the right subtree, visit the root
 
 ## Credits
-This project was inspired by [[The Odin Project](https://www.theodinproject.com/lessons/javascript-binary-search-trees)], which is an open source curriculum for learning web development.
+This project was inspired by [The Odin Project](https://www.theodinproject.com/lessons/javascript-binary-search-trees), which is an open source curriculum for learning web development.
